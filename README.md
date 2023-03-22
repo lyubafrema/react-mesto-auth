@@ -7,7 +7,7 @@
 
 ### GH-Pages
 
-Вы можете открыть проект в своем браузере [по этой ссылке](https://lyubafrema.github.io/mesto-react-auth/).
+Вы можете открыть проект в своем браузере [по этой ссылке](https://lyubafrema.github.io/react-mesto-auth/#/).
 
 ---
 
