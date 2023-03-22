@@ -1,0 +1,9 @@
+.header__info-container {
+  display: flex;
+}
+
+@media screen and (max-width: 917px) {
+  .header__info-container {
+    margin-right: 19px;
+  }
+}
