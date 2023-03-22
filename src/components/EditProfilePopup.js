@@ -42,12 +42,12 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser, onOverlayClose, isLoad
       text="Сохранить">
           <div className="popup__input-container popup__input-container_top">
             <input id="name-input" type="text" name="name" placeholder="Имя" className="popup__input popup__input_type_name"
-                minLength="2" maxLength="40" required value={name} onChange={handleChangeName}/>
+                minLength="2" maxLength="40" required value={name || ""} onChange={handleChangeName}/>
               <span className="name-input-error popup__input-error"></span>
             </div>
             <div className="popup__input-container popup__input-container_bottom">
               <input id="caption-input" type="text" name="about" placeholder="О себе"
-                className="popup__input popup__input_type_caption" minLength="2" maxLength="200" required value={description} onChange={handleChangeDescription}/>
+                className="popup__input popup__input_type_caption" minLength="2" maxLength="200" required value={description || ""} onChange={handleChangeDescription}/>
               <span className="caption-input-error popup__input-error"></span>
           </div>
     </PopupWithForm>

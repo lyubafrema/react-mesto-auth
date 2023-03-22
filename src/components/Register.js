@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import UserDataForm from "./UserDataForm";
 
-function Register ({ onRegister, setRegisterErr, setIsInfoTooltipOpen }) {
+function Register ({ onRegister }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,33 +28,21 @@ function Register ({ onRegister, setRegisterErr, setIsInfoTooltipOpen }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    onRegister({email, password})
-      .then(() => {
-        resetForm();
-        navigate('/', {replace: true});
-        setRegisterErr(false);
-        setIsInfoTooltipOpen((prev) => !prev);
-      })
-      .catch((err) => {
-        console.log(err)
-        setRegisterErr(true);
-        setIsInfoTooltipOpen((prev) => !prev);
-      });
+    resetForm();
+    onRegister({email, password});
   }
 
   return (
     <div className="register">
       <h3 className="register__title">Регистрация</h3>
-      <form className="register__form" onSubmit={handleSubmit}>
-        <input id="email-input" type="email" name="email" placeholder="Email" className="register__form_input"
-                minLength="2" maxLength="100" required value={email} onChange={handleChangeEmail}/>
-        <span className="email-input-error"></span>
-        <input id="password-input" type="password" name="password" placeholder="Пароль"
-                className="register__form_input" minLength="2" maxLength="100" required value={password} onChange={handleChangePassword}/>
-        <span className="password-input-error"></span>
-      <button type="submit" className="register__submit-button">Зарегистрироваться</button>
-      </form>
+      <UserDataForm
+        buttonText="Зарегистрироваться"
+        handleSubmit={handleSubmit}
+        handleChangeEmail={handleChangeEmail}
+        handleChangePassword={handleChangePassword}
+        email={email}
+        password={password}>
+      </UserDataForm>
       <div className="register__log-in">
         <p className="register__log-in_title">Уже зарегистрированы? <Link to="/signin" className="register__log-in_link">Войти</Link></p>
       </div>

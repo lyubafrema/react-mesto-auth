@@ -27,7 +27,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [submitIsLoading, setSubmitIsLoading] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [IsInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
@@ -35,22 +35,11 @@ function App() {
   const [registerErr, setRegisterErr] = useState(false);
   const navigate = useNavigate();
 
-  //  загрузка карточек и инфы о пользователе
-  useEffect(() => {
-    Promise.all([api.getInitialCards(), api.getUserInfo()])
-      .then(([cards, data]) => {
-        setCards(cards);
-        setCurrentUser(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      })
-  }, [])
 
-  // получаем данные пользователя (email)
+  /// Спасибо за ревью! Постаралась всё поправить)
+
+
+    // получаем данные пользователя (email)
   const auth = (token) => {
     mestoAuth.getContent(token)
       .then((res) => {
@@ -61,9 +50,10 @@ function App() {
           })
         }
       })
+      .catch((err) => console.log(err))
   }
 
-  // проверяем есть ли токен в локал сторейдж, если да - авторизуем
+    // проверяем есть ли токен в локал сторейдж, если да - авторизуем
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -71,12 +61,29 @@ function App() {
     }
   }, [isLogged])
 
-  //проверяем авторизован ли пользователь, если да - перенаправляем на главную страницу
-  useEffect(() => {
+   // проверяем авторизован ли пользователь, если да - перенаправляем на главную страницу
+   useEffect(() => {
     if (isLogged) {
       navigate('/', {replace: true})
     }
   }, [isLogged, navigate])
+
+  //  загрузка карточек и инфы о пользователе
+  useEffect(() => {
+    setIsLoading(true);
+    isLogged &&
+    Promise.all([api.getInitialCards(), api.getUserInfo()])
+      .then(([cards, data]) => {
+        setCards(cards);
+        setCurrentUser(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }, [isLogged])
 
   // функция авторизации
   const onLogin = ({email, password}) => {
@@ -90,6 +97,8 @@ function App() {
           localStorage.setItem('token', res.token);
         }
       })
+      .then(() => navigate('/', {replace: true}))
+      .catch((err) => console.log(err));
   }
 
   // функция регистрации
@@ -103,6 +112,16 @@ function App() {
           return res;
         }
       })
+      .then(() => {
+        navigate('/', {replace: true});
+        setRegisterErr(false);
+        setIsInfoTooltipOpen((prev) => !prev);
+      })
+      .catch((err) => {
+        console.log(err)
+        setRegisterErr(true);
+        setIsInfoTooltipOpen((prev) => !prev);
+      });
   }
 
   // функция выхода
@@ -238,7 +257,7 @@ function App() {
     }
   }
 
-  if (isLoading) {
+  if (isLogged && isLoading) {
     return (
       <div className="root">
         <div className="page">
@@ -274,8 +293,6 @@ function App() {
           path="/signup"
           element={<Register
             onRegister={onRegister}
-            setRegisterErr={setRegisterErr}
-            setIsInfoTooltipOpen={setIsInfoTooltipOpen}
             />}/>
           <Route
           path="/signin"
